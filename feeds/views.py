@@ -5,3 +5,6 @@ from .models import Feed
 def index(request):
     feeds = Feed.objects.all()
     return render(request, 'feeds/index.html', {'feeds': feeds})
+
+def new(request):
+    return render(request, 'feeds/new.html', {})
