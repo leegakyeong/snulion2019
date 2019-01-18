@@ -20,6 +20,15 @@ def show(request, id):
     if request.method == 'GET': # show
         feed = Feed.objects.get(id=id)
         return render(request, 'feeds/show.html', {'feed': feed})
+    elif request.method == 'POST': # update
+        title = request.POST['title']
+        content = request.POST['content']
+        feed = Feed.objects.get(id=id)
+        feed.title = title
+        feed.content = content
+        feed.save()
+        feed.update_date()
+        return redirect('/feeds/' + str(id))
 
 def edit(request, id):
     feed = Feed.objects.get(id=id)
