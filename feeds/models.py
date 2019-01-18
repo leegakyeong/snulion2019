@@ -14,3 +14,11 @@ class Feed(models.Model):
 
     def __str__(self):
         return self.title
+
+class FeedComment(models.Model):
+    content = models.TextField()
+    feed = models.ForeignKey(Feed, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return str(self.id)
