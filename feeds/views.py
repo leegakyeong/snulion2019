@@ -20,3 +20,7 @@ def show(request, id):
     if request.method == 'GET': # show
         feed = Feed.objects.get(id=id)
         return render(request, 'feeds/show.html', {'feed': feed})
+
+def edit(request, id):
+    feed = Feed.objects.get(id=id)
+    return render(request, 'feeds/edit.html', {'feed': feed})
