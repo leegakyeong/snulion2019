@@ -33,3 +33,8 @@ def show(request, id):
 def edit(request, id):
     feed = Feed.objects.get(id=id)
     return render(request, 'feeds/edit.html', {'feed': feed})
+
+def delete(request, id):
+    feed = Feed.objects.get(id=id)
+    feed.delete()
+    return redirect('/feeds')

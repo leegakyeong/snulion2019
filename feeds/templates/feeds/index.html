@@ -3,6 +3,10 @@
 {% for feed in feeds %}
   <div style="border: 1px solid grey;">
     <a href="/feeds/{{ feed.id }}">더보기</a>
+    <form action="/feeds/{{ feed.id }}/delete" method='POST'>
+      {% csrf_token %}
+      <button type="submit">삭제</button>
+    </form>
     <p>{{ feed.title }}</p>
     <p>{{ feed.content }}</p>
   </div>
