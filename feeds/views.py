@@ -15,3 +15,8 @@ def index(request):
 
 def new(request):
     return render(request, 'feeds/new.html', {})
+
+def show(request, id):
+    if request.method == 'GET': # show
+        feed = Feed.objects.get(id=id)
+        return render(request, 'feeds/show.html', {'feed': feed})
