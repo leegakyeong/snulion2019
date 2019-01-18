@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Feed
+from .models import Feed, FeedComment
 from django.shortcuts import redirect
 
 # Create your views here.
@@ -37,4 +37,14 @@ def edit(request, id):
 def delete(request, id):
     feed = Feed.objects.get(id=id)
     feed.delete()
+    return redirect('/feeds')
+
+def create_comment(request, id):
+    content = request.POST['content']
+    FeedComment.objects.create(feed_id=id, content=content)
+    return redirect('/feeds')
+
+def delete_comment(request, id, cid):
+    c = FeedComment.objects.get(id=cid)
+    c.delete()
     return redirect('/feeds')
