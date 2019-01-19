@@ -1,5 +1,5 @@
 <h1>new feed</h1>
-<form action="/feeds/" method="POST">
+<form action="{% url 'new' %}" method="POST"> <!-- 사실 아예 action을 안 줘도 이 템플릿이 createview에서 나온 애기 때문에 알아서 감! 사실 아예 지우는 게 더 좋음 -->
   {% csrf_token %}
   <p>title</p>
   <input name="title" /> <br />
