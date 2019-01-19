@@ -2,16 +2,24 @@ from django.shortcuts import render
 from .models import Feed, FeedComment
 from django.shortcuts import redirect
 
+from django.views.generic import ListView
+
+class FeedListView(ListView):
+    model = Feed  # 어떤 모델이 적용될 것인지
+    template_name = 'feeds/index.html'  # default: feeds/feed_list.html
+    context_object_name = 'feeds'  # default: object_list, 모델을 다루는 경우 추가로 feed_list
+    # -> 함수형 뷰 render 안에서 중괄호로 전달하는 것
+
 # Create your views here.
-def index(request):
-    if request.method == 'GET': # index
-        feeds = Feed.objects.all()
-        return render(request, 'feeds/index.html', {'feeds': feeds})
-    elif request.method == 'POST': # create
-        title = request.POST['title']
-        content = request.POST['content']
-        Feed.objects.create(title=title, content=content)
-        return redirect('/feeds')
+# def index(request):
+#     if request.method == 'GET': # index
+#         feeds = Feed.objects.all()
+#         return render(request, 'feeds/index.html', {'feeds': feeds})
+#     elif request.method == 'POST': # create
+#         title = request.POST['title']
+#         content = request.POST['content']
+#         Feed.objects.create(title=title, content=content)
+#         return redirect('/feeds')
 
 def new(request):
     return render(request, 'feeds/new.html', {})
