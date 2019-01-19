@@ -20,4 +20,6 @@ from django.conf.urls import include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('feeds/', include('feeds.urls')),
+
+    path('accounts/', include('django.contrib.auth.urls')), # 접속할 때도 뒤에 / 있는 게 중요!!!!
 ]
