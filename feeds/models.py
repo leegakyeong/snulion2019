@@ -15,6 +15,12 @@ class Feed(models.Model):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return reverse('show', kwargs={'pk': self.pk}) # 여기로 리다이렉트해라..>?
+        # CreateView, UpdateView의 default success_url
+        # url의 이름을 view에서 어떻게 사용하느냐
+        # **? kwargs란: 딕셔너리 형태로 되어 있어서 두 번 풀어 줘야 함
+
 class FeedComment(models.Model):
     content = models.TextField()
     feed = models.ForeignKey(Feed, on_delete=models.CASCADE)
