@@ -2,5 +2,6 @@
 <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
     {{ form.as_p }} <!-- p 태그 안에다 각각의 필드를 넣어라 -->
+    <input type="hidden" name="next" value="{{ next }}" /> <!-- 추가 -->
     <input type="submit" value="로그인" />
 </form>
