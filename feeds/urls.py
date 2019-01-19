@@ -4,9 +4,12 @@ from feeds import views
 urlpatterns = [
     # path('', views.index, name='index'),
     path('', views.FeedListView.as_view(), name='index'),
-    
+
     path('new/', views.new, name='new'),
-    path('<int:id>/', views.show, name='show'),
+
+    # path('<int:id>/', views.show, name='show'),
+    path('<int:pk>/', views.FeedDetailView.as_view(), name='show'),
+
     path('<int:id>/edit', views.edit, name='edit'),
     path('<int:id>/delete', views.delete, name='delete'),
     path('<int:id>/comments/', views.create_comment, name='create_comment'),

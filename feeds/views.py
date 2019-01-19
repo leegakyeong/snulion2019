@@ -2,13 +2,18 @@ from django.shortcuts import render
 from .models import Feed, FeedComment
 from django.shortcuts import redirect
 
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 class FeedListView(ListView):
     model = Feed  # 어떤 모델이 적용될 것인지
     template_name = 'feeds/index.html'  # default: feeds/feed_list.html
     context_object_name = 'feeds'  # default: object_list, 모델을 다루는 경우 추가로 feed_list
     # -> 함수형 뷰 render 안에서 중괄호로 전달하는 것
+
+class FeedDetailView(DetailView):
+    model = Feed
+    template_name = 'feeds/show.html'  # default: feeds/detail.html
+    context_variable_name = 'feed'  # default: object
 
 # Create your views here.
 # def index(request):
@@ -24,19 +29,19 @@ class FeedListView(ListView):
 def new(request):
     return render(request, 'feeds/new.html', {})
 
-def show(request, id):
-    if request.method == 'GET': # show
-        feed = Feed.objects.get(id=id)
-        return render(request, 'feeds/show.html', {'feed': feed})
-    elif request.method == 'POST': # update
-        title = request.POST['title']
-        content = request.POST['content']
-        feed = Feed.objects.get(id=id)
-        feed.title = title
-        feed.content = content
-        feed.save()
-        feed.update_date()
-        return redirect('/feeds/' + str(id))
+# def show(request, id):
+#     if request.method == 'GET': # show
+#         feed = Feed.objects.get(id=id)
+#         return render(request, 'feeds/show.html', {'feed': feed})
+#     elif request.method == 'POST': # update
+#         title = request.POST['title']
+#         content = request.POST['content']
+#         feed = Feed.objects.get(id=id)
+#         feed.title = title
+#         feed.content = content
+#         feed.save()
+#         feed.update_date()
+#         return redirect('/feeds/' + str(id))
 
 def edit(request, id):
     feed = Feed.objects.get(id=id)
