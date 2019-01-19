@@ -119,3 +119,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# user가 로그인 해서 성공하면 어떤 페이지로 redirect 할껀지를 이렇게 정해주는거임
+LOGIN_REDIRECT_URL = "/feeds/"
