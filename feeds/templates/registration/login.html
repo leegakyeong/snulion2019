@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if next %}
+    {% if user.is_authenticated %}
+        <p>Your account doesn't have access to this page. To proceed, 
+        please login with an account that has access.</p>
+    {% else %}
+        <p>Please login to see this page.</p>
+    {% endif %}
+{% endif %}
+<h1>로그인</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="hidden" name="next" value="{{next}}" />
+    <input type="submit" value="로그인" />
+</form>
+{% endblock content %}

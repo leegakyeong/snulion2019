@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Feed Page</h1>
+<a href='/feeds/new'>New Feed</a>
+{% for feed in feeds %}
+    <div style="border: 3px solid grey;">
+        <a href='/feeds/{{feed.id}}'> 더보기</a>
+        <form action='/feeds/{{feed.id}}/delete' method='POST'>
+            {% csrf_token %}
+            <button type="submit">삭제</button>
+        </form>
+        <p>{{feed.title}}</p>  <!-- 중첩된 괄호: 파이썬 코드인데, 보인다. -->
+        <p>작성자: {{feed.author.username}}</p>
+        <p>{{feed.content}}</p>
+        <h3>댓글</h3>
+        {% for c in feed.feedcomment_set.all %}
+            <p><!--{{c.author.username}}:--> {{c.content}}</p>
+            <form action='/feeds/{{feed.id}}/comments/{{c.id}}/'method='POST'>
+                {% csrf_token %}
+                <button>댓글 삭제</button>
+            </form>
+        {% endfor %}
+        <form action="/feeds/{{feed.id}}/comments/" method="POST">
+            {% csrf_token %}
+            <input type="text" name="content"/>
+            <button type="submit">댓글 달기</button>
+        </form>
+    </div>
+{% endfor %}
+
+{% endblock content %}
