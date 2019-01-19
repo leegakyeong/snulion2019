@@ -1,5 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
 <h1>new feed</h1>
-<form action="/feeds/" method="POST">
+<form action="" method="POST">
   {% csrf_token %}  <!-- 데이터를 다른 url로 보낼 때 중간에서 데이터를 가로채는 것을 막기 위해 토큰을 넣어줌 -->
   <p>title</p>
   <input name="title" /> <br />
@@ -7,3 +10,4 @@
   <input name="content" /> <br />
   <input type="submit" value="submit" />    <!-- value는 버튼에 올라가는 라벨 -->
 </form>
+{% endblock content %}
