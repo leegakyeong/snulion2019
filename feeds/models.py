@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.urls import reverse
 
 # Create your models here.
 class Feed(models.Model):
@@ -14,6 +15,9 @@ class Feed(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def get_absolute_url(self):
+        return reverse('show', kwargs={'pk': self.pk})  # CreateView, UpdateView의 default success_url
 
 class FeedComment(models.Model):
     content = models.TextField()
