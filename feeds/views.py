@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Feed
+from .models import Feed, FeedComment
 from django.shortcuts import redirect
 
 # Create your views here.
@@ -37,4 +38,14 @@ def edit(request, id):
 def delete(request, id):    # delete라는 메소드가 이미 있으니까 사실 이 함수 만들 때는 'delete'라는 이름은 피해줘야 함
     feed = Feed.objects.get(id=id)
     feed.delete()
+    return redirect('/feeds')
+
+def create_comment(request, id):    # id는 Feed id
+    content = request.POST['content']
+    FeedComment.objects.create(feed_id=id, content=content)
+    return redirect('/feeds')
+
+def delete_comment(request, id, cid):   # 사실 id는 필요없고 cid만 있어도 됨. 모든 피드의 코멘트가 다 다른 id를 갖고 있기 때문에.
+    c = FeedComment.objects.get(id=cid)
+    c.delete()
     return redirect('/feeds')
