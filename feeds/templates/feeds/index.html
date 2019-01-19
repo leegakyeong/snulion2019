@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+
+{% block content %}
 <h1>feed page</h1>
 <a href="/feeds/new">new feed</a>
 {% for feed in feeds %}
@@ -23,3 +26,4 @@
     </form>
   </div>
 {% endfor %}
+{% endblock content %}
