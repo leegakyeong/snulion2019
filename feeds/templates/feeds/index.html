@@ -2,7 +2,11 @@
 <a href="/feeds/new">new feed</a>
 {% for feed in feeds %}
   <div style="border: 1px solid grey;">
-    <a href="/feed/{{ feed.id }}">더보기</a>
+    <a href="/feeds/{{ feed.id }}">더보기</a> <!-- a는 get밖에 못 보냄 -->
+    <form action="/feeds/{{ feed.id }}/delete" method='POST'> <!-- form도 delete를 못해.. 그래서 어쩔 수 없이 post로 보냄-->
+      {% csrf_token %}
+      <button type="submit">삭제</button>
+    </form>
     <p>{{ feed.title }}</p>
     <p>{{ feed.content }}</p>
   </div>
