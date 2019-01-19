@@ -1,4 +1,6 @@
-<form action="/feeds/{{ feed.id }}/" method="POST">
+{% extends "base.html" %}
+{% block content %}
+<form action="" method="POST">
     {% csrf_token %}
     <p>title</p>
     <input name="title" value="{{ feed.title }}" /> <br />
@@ -6,3 +8,4 @@
     <input name="content" value="{{ feed.content }}" /> <br />
     <input type="submit" value="submit" />
 </form>
+{% endblock content %}

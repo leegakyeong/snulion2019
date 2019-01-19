@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.urls import reverse
 
 # Create your models here.
 class Feed(models.Model):
@@ -11,6 +12,9 @@ class Feed(models.Model):
     def update_date(self):
         self.updated_at = timezone.now()
         self.save()
+
+    def get_absolute_url(self):
+        return reverse('show', kwargs={'pk': self.pk})  # CreateView, UpdateView의 default success_url
 
     def __str__(self):
         return self.title
