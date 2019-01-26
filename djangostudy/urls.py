@@ -16,10 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include
+from feeds import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('feeds/', include('feeds.urls')),
-
     path('accounts/', include('django.contrib.auth.urls')), # 접속할 때도 뒤에 / 있는 게 중요!!!!
+    path('accounts/signup/', views.SignUpView.as_view(), name='sign_up') # 원래 없어서 따로 수동으로 만들어 줌
 ]
