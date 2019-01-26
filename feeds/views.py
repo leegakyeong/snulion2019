@@ -4,6 +4,8 @@ from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 class FeedListView(ListView):
@@ -20,10 +22,15 @@ class FeedListView(ListView):
 #         content = request.POST['content']
 #         Feed.objects.create(title=title, content=content)
 #         return redirect('/feeds')
-class FeedCreateView(CreateView):
+class FeedCreateView(LoginRequiredMixin, CreateView):
+    login_url = '/accounts/login/'
     model = Feed
     fields = ['title', 'content']
     template_name = 'feeds/new.html'  # defalut: 'feeds/feed_create_form.html'.
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 # def new(request):
 #     return render(request, 'feeds/new.html', {})
@@ -76,3 +83,8 @@ def delete_comment(request, id, cid):
     c = FeedComment.objects.get(id=cid)
     c.delete()
     return redirect('/feeds')
+
+class SignUpView(CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'registration/signup.html'
