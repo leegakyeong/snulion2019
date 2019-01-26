@@ -1,0 +1,8 @@
+<form action="" method="POST">
+    {% csrf_token %}
+    <p>title</p>
+    <input name="title" value="{{ event.title }}" /> <br />
+    <p>date</p>
+    <input name="date" value="{{ event.date }}" /> <br />
+    <input type="submit" value="submit" />
+  </form>

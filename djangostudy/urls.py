@@ -20,4 +20,5 @@ from django.conf.urls import include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('feeds/', include('feeds.urls')),
+    path('events/', include('events.urls')),
 ]
