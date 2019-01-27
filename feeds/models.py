@@ -26,7 +26,7 @@ class FeedComment(models.Model):
     content = models.TextField()
     feed = models.ForeignKey(Feed, on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
-    #author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.id)
