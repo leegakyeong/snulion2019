@@ -10,6 +10,7 @@ class Feed(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(blank=True, null=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    like_user_set = models.ManyToManyField(User, blank=True, related_name='likes_user_set', through='Like')
 
     def update_date(self):
         self.updated_at = timezone.now()
@@ -29,3 +30,9 @@ class FeedComment(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    feed = models.ForeignKey(Feed, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
