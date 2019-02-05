@@ -1,17 +1,18 @@
 from django.shortcuts import render
-from .models import Feed
 from .models import Feed, FeedComment
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
+# Create your views here.
 class FeedListView(ListView): # ListView라는 애가 많은 변수와 메소드를 갖고 있음. 디폴트 값 중 필요한 것만 바꾸면 됨
     model = Feed  # 어떤 모델이 적용될 것인지
     template_name = 'feeds/index.html'  # default: feeds/feed_list.html
     context_object_name = 'feeds'  # default: object_list, 모델을 다루는 경우 추가로 feed_list
 
-# # Create your views here.
 # def index(request):
 #     if request.method == 'GET': # index
 #         feeds = Feed.objects.all()
@@ -21,12 +22,16 @@ class FeedListView(ListView): # ListView라는 애가 많은 변수와 메소드
 #         content = request.POST['content']
 #         Feed.objects.create(title=title, content=content)
 #         return redirect('/feeds')
-
-class FeedCreateView(CreateView):
+class FeedCreateView(LoginRequiredMixin, CreateView):
+    login_url = '/accounts/login/'
     model = Feed
     fields = ['title', 'content']
     template_name = 'feeds/new.html'  # defalut: 'feeds/feed_create_form.html'.
 
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+        
 # def new(request):
 #     return render(request, 'feeds/new.html', {})
 
@@ -78,3 +83,8 @@ def delete_comment(request, id, cid):   # 사실 id는 필요없고 cid만 있�
     c = FeedComment.objects.get(id=cid)
     c.delete()
     return redirect('/feeds')
+
+class SignUpView(CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'registration/signup.html'
