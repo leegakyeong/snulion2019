@@ -1,7 +1,9 @@
 # ./homes/models.py
 from django.db import models
-from django.utils import timezone 
+from django.utils import timezone
+from faker import Faker
 import datetime
+import random
 
 
 # Create your models here.
@@ -18,14 +20,30 @@ class Home(models.Model):
         self.updated_at = timezone.now()
         self.save()
 
+    def seed(count):
+        myfake = Faker('ko_KR')
+        for i in range(count):
+            Home.objects.create(
+                title=myfake.bs(),
+                address=myfake.address(),
+                available_dates_start=myfake.date(),
+                available_dates_end=myfake.date()
+            )
+
     def __str__(self):
         return self.title
 
 
-# class Review(models.Model):
-#     content = models.TextField()
-#     home = models.ForeignKey(Home, on_delete=models.CASCADE)
-#     created_at = models.DateTimeField(default=timezone.now)
-# 
-#     def __str__(self):
-#         return str(self.id)
+class Review(models.Model):
+    content = models.TextField()
+    home = models.ForeignKey(Home, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def seed(count):
+        myfake = Faker('ko_KR')
+        for i in range(count):
+            home_id = random.randint(1, Home.objects.all().count())
+            Review.objects.create(content=myfake.catch_phrase(), home=Home.objects.get(id=home_id))
+
+    def __str__(self):
+        return str(self.id)

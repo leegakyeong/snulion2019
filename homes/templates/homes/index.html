@@ -19,6 +19,18 @@
         <p>제목: {{ home.title }}</p>
         <p>주소: {{ home.address }}</p>
         <p>예약 가능 날짜: {{ home.available_dates_start }} ~ {{ home.available_dates_end }}</p>
+        {% for review in home.review_set.all %}
+          <p>ㄴ {{ review.content }}</p>
+          <form action="/homes/{{ home.id }}/reviews/{{ review.id }}/" method="POST">
+            {% csrf_token %}
+            <button>리뷰 삭제</button>
+          </form>
+        {% endfor %}
+        <form action="/homes/{{ home.id }}/reviews/" method="POST">
+          {% csrf_token %}
+          <input type="text" name="content" />
+          <button type="submit">리뷰 저장</button>
+        </form>
     </div><br>
 {% endfor %}
 </body>

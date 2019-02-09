@@ -1,6 +1,6 @@
 # ./homes/views.py
 from django.shortcuts import render
-from .models import Home
+from .models import Home, Review
 from django.shortcuts import redirect, get_object_or_404
 
 
@@ -61,4 +61,16 @@ def edit(request, id):
 def delete(request, id):
     home = Home.objects.get(id=id)
     home.delete()
+    return redirect('/homes')
+
+
+def create_review(request, id):
+    content = request.POST['content']
+    Review.objects.create(home_id=id, content=content)
+    return redirect('/homes')
+
+
+def delete_review(request, id, review_id):
+    c = Review.objects.get(id=review_id)
+    c.delete()
     return redirect('/homes')
