@@ -24,9 +24,11 @@ class Home(models.Model):
 
     def seed(count):
         myfake = Faker('ko_KR')
+        host_id = random.randint(1, User.objects.all().count())
         for i in range(count):
             Home.objects.create(
                 title=myfake.bs(),
+                host_id=host_id,
                 address=myfake.address(),
                 available_dates_start=myfake.date(),
                 available_dates_end=myfake.date()
@@ -46,8 +48,13 @@ class Review(models.Model):
     def seed(count):
         myfake = Faker('ko_KR')
         for i in range(count):
+            author_id = random.randint(1, User.objects.all().count())
             home_id = random.randint(1, Home.objects.all().count())
-            Review.objects.create(content=myfake.catch_phrase(), home=Home.objects.get(id=home_id))
+            Review.objects.create(
+                content=myfake.catch_phrase(),
+                home=Home.objects.get(id=home_id),
+                author_id=author_id
+            )
 
     def __str__(self):
         return str(self.id)

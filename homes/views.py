@@ -69,7 +69,8 @@ def delete(request, id):
 
 def create_review(request, id):
     content = request.POST['content']
-    Review.objects.create(home_id=id, content=content)
+    author_id = request.user.id
+    Review.objects.create(home_id=id, content=content, author_id=author_id)
     return redirect('/homes')
 
 
