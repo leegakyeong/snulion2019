@@ -1,11 +1,14 @@
 from django.shortcuts import render
-from .models import Feed, FeedComment
+from .models import Feed, FeedComment, Like
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 
 # Create your views here.
 class FeedListView(ListView):
@@ -83,6 +86,15 @@ def delete_comment(request, id, cid):
     c = FeedComment.objects.get(id=cid)
     c.delete()
     return redirect('/feeds')
+
+def feed_like(request, pk):
+    feed = Feed.objects.get(id = pk)
+    likeList = feed.like_set.filter(user_id = request.user.id)
+    if likeList.count() > 0:
+        feed.like_set.get(user_id = request.user.id).delete()
+    else:
+        Like.objects.create(user_id = request.user.id, feed_id = pk)
+    return redirect ('/feeds')
 
 class SignUpView(CreateView):
     form_class = UserCreationForm

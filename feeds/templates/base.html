@@ -13,6 +13,9 @@
                 {% else %}
                         <a href="{% url 'login'%}?next={{request.path}}">로그인</a>
                 {% endif %} 
+                <div style="text-align: right">                        # 추가
+                    내가 좋아한 글 : {{ user.like_feeds.count }}개         # 추가
+                </div>
             </div>
             Snulion Feeds
         </header>

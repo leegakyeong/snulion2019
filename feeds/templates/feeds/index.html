@@ -26,6 +26,7 @@
       <input type="text" name="content" />
       <button type="submit">댓글 달기</button>
     </form>
+    <a href="/feeds/{{ feed.id }}/like">{{ feed.liked_users.count }} Likes</a>
   </div>
 {% endfor %}
 {% endblock content %}
