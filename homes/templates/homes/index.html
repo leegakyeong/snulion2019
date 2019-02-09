@@ -1,0 +1,25 @@
+<!-- ./homes/templates/homes/index.html -->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>AirLion</title>
+</head>
+<body>
+<h1>모든 숙소 보기</h1>
+<a href="/homes/new">숙소 추가</a><br><br>
+{% for home in homes %}
+    <div style="border: 1px solid grey;">
+        <a href="{% url 'homes:show' home.id %}">더보기</a>
+        <form action="{% url 'homes:delete' home.id %}" method='POST'>
+            {% csrf_token %}
+            <button type="submit">삭제</button>
+        </form>
+        <p>제목: {{ home.title }}</p>
+        <p>상세설명: {{ home.description }}</p>
+        <p>예약 가능 날짜: {{ home.available_dates_start }} ~ {{ home.available_dates_end }}</p>
+    </div><br>
+{% endfor %}
+</body>
+</html>

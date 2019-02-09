@@ -21,6 +21,7 @@ from feeds import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('feeds/', include('feeds.urls')),
+    path('homes/', include('homes.urls')),  # 추가
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup/', views.SignUpView.as_view(), name='sign_up'),
 ]
