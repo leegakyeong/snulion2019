@@ -36,3 +36,16 @@ class Like(models.Model):
     feed = models.ForeignKey(Feed, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Follow(models.Model): # 얘를 추가해주세요!
+    follow_to = models.ForeignKey(User, related_name = 'follow_to', on_delete=models.CASCADE)
+    follow_from = models.ForeignKey(User, related_name = 'follow_from', on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('follow_to', 'follow_from')
+
+    def __str__(self):
+        return '{} follows {}'.format(self.follow_from, self.follow_to)
+
+User.add_to_class('follows',
+                      models.ManyToManyField('self', through=Follow, related_name='follow', symmetrical=False))

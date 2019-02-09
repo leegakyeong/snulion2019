@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Feed, FeedComment, Like
+from .models import Feed, FeedComment, Like, Follow
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -100,3 +100,22 @@ def feed_like(request, pk):
     else:
         Like.objects.create(user_id = request.user.id, feed_id = pk)
     return redirect ('/feeds')
+
+def Lets_Follow(request, pk):
+    follow_from = request.user
+    follow_to = User.objects.get(id = pk)
+
+    try:
+        following_already = Follow.objects.get(follow_from=follow_from, follow_to=follow_to)
+    except Follow.DoesNotExist:
+        following_already = None
+
+    if following_already:
+        following_already.delete()
+    else:
+        # Follow.objects.create(follow_from=follow_from, follow_to=follow_to)
+        f = Follow()
+        f.follow_from, f.follow_to = follow_from, follow_to
+        f.save()
+
+    return redirect('/feeds')
