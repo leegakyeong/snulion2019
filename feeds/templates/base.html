@@ -1,0 +1,23 @@
+<!-- base.html -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SNULION</title>
+    </head>
+    <body>
+        <header>
+            <div style="text-align: right;">
+                {% if user.is_authenticated %}
+                        {{ user.get_username }}님, 안녕하세요
+                        <a href="{% url 'logout'%}?next={{request.path}}">로그아웃</a> 
+                {% else %}
+                        <a href="{% url 'login'%}?next={{request.path}}">로그인</a>
+                {% endif %} 
+            </div>
+            Snulion Feeds
+        </header>
+        {% block content %}
+        {% endblock content %}
+    </body>
+</html>

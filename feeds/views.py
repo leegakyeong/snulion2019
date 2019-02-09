@@ -4,6 +4,8 @@ from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 class FeedListView(ListView):
@@ -38,10 +40,15 @@ class FeedDetailView(DetailView):
 #         feed.update_date()
 #         return redirect('/feeds/' + str(id))
 
-class FeedCreateView(CreateView):
+class FeedCreateView(LoginRequiredMixin, CreateView):
     model = Feed
     fields = ['title', 'content']
     template_name = 'feeds/new.html'
+    login_url = '/accounts/login/'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user #작성자가 form에 안 들어가있기 때문에 overriding 해준 것.
+        return super().form_valid(form)
 # def new(request):
 #     return render(request, 'feeds/new.html', {})
 
@@ -64,10 +71,19 @@ class FeedDeleteView(DeleteView):
 
 def create_comment(request, id):
     content = request.POST['content']
-    FeedComment.objects.create(feed_id=id, content=content)
+    author_id = request.user.id
+    FeedComment.objects.create(feed_id=id, content=content, author_id=author_id)
+    
     return redirect('/feeds')
 
 def delete_comment(request, id, cid):
     c = FeedComment.objects.get(id=cid)
     c.delete()
     return redirect('/feeds')
+
+class SignUpView(CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login') 
+    template_name = 'registration/signup.html'
+
+# 회원가입 창, 코멘트에 author 넘기기
