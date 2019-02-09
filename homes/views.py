@@ -1,7 +1,10 @@
 # ./homes/views.py
+from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render
 from .models import Home, Review
 from django.shortcuts import redirect, get_object_or_404
+from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
 
 
 def index(request):
@@ -74,3 +77,9 @@ def delete_review(request, id, review_id):
     c = Review.objects.get(id=review_id)
     c.delete()
     return redirect('/homes')
+
+
+class SignUpView(CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'registration/signup.html'

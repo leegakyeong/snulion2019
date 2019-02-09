@@ -7,31 +7,36 @@
     <title>AirLion</title>
 </head>
 <body>
-<h1>모든 숙소 보기</h1>
-<a href="/homes/new">숙소 추가</a><br><br>
-{% for home in homes %}
-    <div style="border: 1px solid grey;">
-        <a href="{% url 'homes:show' home.id %}">더보기</a>
-        <form action="{% url 'homes:delete' home.id %}" method='POST'>
-            {% csrf_token %}
-            <button type="submit">삭제</button>
-        </form>
-        <p>제목: {{ home.title }}</p>
-        <p>주소: {{ home.address }}</p>
-        <p>예약 가능 날짜: {{ home.available_dates_start }} ~ {{ home.available_dates_end }}</p>
-        {% for review in home.review_set.all %}
-          <p>ㄴ {{ review.content }}</p>
-          <form action="/homes/{{ home.id }}/reviews/{{ review.id }}/" method="POST">
-            {% csrf_token %}
-            <button>리뷰 삭제</button>
-          </form>
-        {% endfor %}
-        <form action="/homes/{{ home.id }}/reviews/" method="POST">
-          {% csrf_token %}
-          <input type="text" name="content" />
-          <button type="submit">리뷰 저장</button>
-        </form>
-    </div><br>
-{% endfor %}
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>모든 숙소 보기</h1>
+    <a href="/homes/new">숙소 추가</a><br><br>
+    {% for home in homes %}
+        <div style="border: 1px solid grey;">
+            <a href="{% url 'homes:show' home.id %}">더보기</a>
+            <form action="{% url 'homes:delete' home.id %}" method='POST'>
+                {% csrf_token %}
+                <button type="submit">삭제</button>
+            </form>
+            <p>제목: {{ home.title }}</p>
+            <p>주소: {{ home.address }}</p>
+            <p>예약 가능 날짜: {{ home.available_dates_start }} ~ {{ home.available_dates_end }}</p>
+            {% for review in home.review_set.all %}
+              <p>ㄴ {{ review.content }}</p>
+              <form action="/homes/{{ home.id }}/reviews/{{ review.id }}/" method="POST">
+                {% csrf_token %}
+                <button>리뷰 삭제</button>
+              </form>
+            {% endfor %}
+            <form action="/homes/{{ home.id }}/reviews/" method="POST">
+              {% csrf_token %}
+              <input type="text" name="content" />
+              <button type="submit">리뷰 저장</button>
+            </form>
+        </div><br>
+    {% endfor %}
+{% endblock content %}
+
 </body>
 </html>

@@ -5,6 +5,9 @@
     <title>Title</title>
 </head>
 <body>
+    {% extends "base.html" %}
+
+    {% block content %}
     <div>
       <a href="/homes">home</a>
       <a href="/homes/{{ home.id }}/edit">edit</a>
@@ -12,5 +15,6 @@
       <p>주소: {{ home.address }}</p>
       <p>예약 가능 날짜: {{ home.available_dates_start }} ~ {{ home.available_dates_end }}</p>
     </div>
+    {% endblock content %}
 </body>
 </html>
