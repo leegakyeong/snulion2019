@@ -9,8 +9,8 @@
         {% csrf_token %}
         <p>제목</p>
         <input name="title" value="{{ home.title }}"/>
-        <p>상세 설명</p>
-        <input name="description" value="{{ home.description }}"/>
+        <p>주소</p>
+        <input name="address" value="{{ home.address }}"/>
         <p>예약 가능 날짜</p>
         <!-- 날짜 field의 경우 value를 넣어도 표시되지 않기 때문에 굳이 value를 지정하지 않겠습니다. -->
         <input type="date" name="available_dates_start"/> ~ <input type="date" name="available_dates_end"/><br><br>

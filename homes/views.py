@@ -10,7 +10,7 @@ def index(request):
         return render(request, 'homes/index.html', {'homes': homes})
     elif request.method == 'POST': # create
         title = request.POST['title']
-        description = request.POST['description']
+        address = request.POST['address']
         available_dates_start = request.POST['available_dates_start']
         available_dates_end = request.POST['available_dates_end']
         if available_dates_start == "": # ""는 date가 아니므로
@@ -19,7 +19,7 @@ def index(request):
             available_dates_end = None
         Home.objects.create(
             title=title,
-            description=description,
+            address=address,
             available_dates_start=available_dates_start,
             available_dates_end=available_dates_end
         )
@@ -36,7 +36,7 @@ def show(request, id):
         return render(request, 'homes/show.html', {'home': home})
     elif request.method == 'POST': # update
         title = request.POST['title']
-        description = request.POST['description']
+        address = request.POST['address']
         available_dates_start = request.POST['available_dates_start']
         available_dates_end = request.POST['available_dates_end']
         if available_dates_start == "":
@@ -45,7 +45,7 @@ def show(request, id):
             available_dates_end = None
         home = Home.objects.get(id=id)
         home.title = title
-        home.description = description
+        home.address = address
         home.available_dates_start = available_dates_start
         home.available_dates_end = available_dates_end
         home.save()

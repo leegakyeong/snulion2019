@@ -7,7 +7,7 @@ import datetime
 # Create your models here.
 class Home(models.Model):
     title = models.CharField(max_length=256)
-    description = models.TextField()
+    address = models.TextField()
     # 예약 날짜는 특정하지 않고 숙소만 등록하고 싶은 경우를 위해 available_dates에 null=True 추가
     available_dates_start = models.DateField(default=datetime.date.today, null=True)
     available_dates_end = models.DateField(default=datetime.date.today() + datetime.timedelta(days=30), null=True) # 오늘로부터 30일 후
@@ -22,4 +22,10 @@ class Home(models.Model):
         return self.title
 
 
-
+# class Review(models.Model):
+#     content = models.TextField()
+#     home = models.ForeignKey(Home, on_delete=models.CASCADE)
+#     created_at = models.DateTimeField(default=timezone.now)
+# 
+#     def __str__(self):
+#         return str(self.id)
