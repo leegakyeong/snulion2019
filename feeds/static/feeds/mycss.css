@@ -3,3 +3,7 @@
 body   {
     color: blue;
 }
+
+.comment-toggle-b {
+    display: none;
+}

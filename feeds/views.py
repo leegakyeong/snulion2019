@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Feed, FeedComment, Like, Follow
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
@@ -9,6 +9,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.http import JsonResponse, HttpResponse
+from django.template import RequestContext
+
 
 class FeedListView(ListView):
     #model = Feed #어떤 모델이 적용될지
@@ -95,8 +98,17 @@ def delete(request, id):
 def create_comment(request, id):
     content = request.POST['content']
     author_id = request.user.id
-    FeedComment.objects.create(feed_id=id, content=content, author_id = author_id)
-    return redirect('/feeds')
+    last = FeedComment.objects.create(feed_id=id, content=content, author_id = author_id)
+    data = {
+        'content': content,
+        'comment_id': last.id,
+        'comment_author': last.author.username,
+        'feed': id
+    }
+
+    return render(request, 'feeds/index.html', {
+        'data': data
+    })
 
 def delete_comment(request, id, cid):
     c = FeedComment.objects.get(id=cid)
