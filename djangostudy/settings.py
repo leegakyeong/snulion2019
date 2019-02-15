@@ -122,3 +122,11 @@ STATIC_URL = '/static/'
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = "/feeds/"
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'staticforder1'),
+    os.path.join(BASE_DIR, 'staticforder2'),
+)
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
