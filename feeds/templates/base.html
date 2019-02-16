@@ -1,19 +1,58 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
         <title>SNULION</title>
+        <link rel="stylesheet" href="{% static 'feeds/mypage.css' %}" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     </head>
     <body>
         <header>
-            <div style="text-align: right;">
-                {% if user.is_authenticated %}
-                    {{ user.get_username }}님, 안녕하세요.
-                    <a href="{% url 'logout'%}?next={{request.path}}">로그아웃</a> 
-                {% else %}
-                    <a href="{% url 'login'%}?next={{request.path}}">로그인</a>
-                {% endif %} 
+            <!-- Always shows a header, even in smaller screens. -->
+            <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+                <header class="mdl-layout__header">
+                <div class="mdl-layout__header-row">
+                    <!-- Title -->
+                    <span class="mdl-layout-title">SNULION</span>
+                    <!-- Add spacer, to align navigation to the right -->
+                    <div class="mdl-layout-spacer"></div>
+                    <!-- Navigation. We hide it in small screens. -->
+                    <nav class="mdl-navigation mdl-layout--large-screen-only">
+                    <a class="mdl-navigation__link" href="">feeds</a>
+                    <a class="mdl-navigation__link" href="">events</a>
+                    <a class="mdl-navigation__link" href="">Link</a>
+                    <a class="mdl-navigation__link" href="">Link</a>
+                    </nav>
+                </div>
+                </header>
+                <div class="mdl-layout__drawer">
+                <span class="mdl-layout-title">SNULION</span>
+                <nav class="mdl-navigation">
+                    <a class="mdl-navigation__link" href="">feeds</a>
+                    <a class="mdl-navigation__link" href="">events</a>
+                    <a class="mdl-navigation__link" href="">Link</a>
+                    <a class="mdl-navigation__link" href="">Link</a>
+                </nav>
+                </div>
+                <main class="mdl-layout__content">
+                    <div class="page-content">
+                        <div style="text-align: right;">
+                            {% if user.is_authenticated %}
+                                {{ user.get_username }}님, 안녕하세요.
+                                <a href="{% url 'logout'%}?next={{request.path}}" class="mdl-button mdl-js-button mdl-button--raised">
+                                    로그아웃
+                                </a>
+                            {% else %}
+                                <a href="{% url 'login'%}?next={{request.path}}">로그인</a>
+                            {% endif %} 
+                        </div>
+                    </div>
+                </main>
             </div>
+            
             Snulion Feeds
         </header>
         {% block content %}

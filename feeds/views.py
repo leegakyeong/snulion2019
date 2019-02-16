@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
-from .models import Feed, FeedComment
+from .models import Feed, FeedComment, Like, Follow
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-
-
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 
 # Create your views here.
 class FeedListView(ListView):
@@ -82,7 +83,8 @@ class FeedDeleteView(DeleteView):
 
 def create_comment(request, id):
     content = request.POST['content']
-    FeedComment.objects.create(feed_id=id, content=content)
+    author = request.user # 추가
+    FeedComment.objects.create(feed_id=id, content=content, author=author)
     return redirect('/feeds')
 
 def delete_comment(request, id, cid):
@@ -94,3 +96,32 @@ class SignUpView(CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'registration/signup.html'
+
+
+def feed_like(request, pk):
+    feed = Feed.objects.get(id = pk)
+    likeList = feed.like_set.filter(user_id = request.user.id)
+    if likeList.count() > 0:
+        feed.like_set.get(user_id = request.user.id).delete()
+    else:
+        Like.objects.create(user_id = request.user.id, feed_id = pk)
+    return redirect ('/feeds')
+
+def Lets_Follow(request, pk):  # 모델 이름이랑 view 이름이 같으면 충돌남! (follow로 하면 안된다)
+    follow_from = request.user
+    follow_to = User.objects.get(id = pk)
+
+    try:
+        following_already = Follow.objects.get(follow_from=follow_from, follow_to=follow_to)
+    except Follow.DoesNotExist:
+        following_already = None
+
+    if following_already:
+        following_already.delete()
+    else:
+        # Follow.objects.create(follow_from=follow_from, follow_to=follow_to)
+        f = Follow()
+        f.follow_from, f.follow_to = follow_from, follow_to
+        f.save()
+
+    return redirect('/feeds')

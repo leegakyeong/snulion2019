@@ -11,6 +11,8 @@ class Feed(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(blank=True, null=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    like_user_set = models.ManyToManyField(User, blank=True, related_name='user_like_set', through='Like')
+    # User에서 접근할 때 related_name으로 feed에 접근할 수 있다.
 
     def update_date(self): # 나중에 수정할 때 씀
         self.updated_at = timezone.now()
@@ -30,3 +32,21 @@ class FeedComment(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    feed = models.ForeignKey(Feed, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Follow(models.Model): # 얘를 추가해주세요!
+    follow_to = models.ForeignKey(User, related_name = 'follow_from', on_delete=models.CASCADE)
+    follow_from = models.ForeignKey(User, related_name = 'follow_to', on_delete=models.CASCADE)
+    class Meta:
+        unique_together = ('follow_to', 'follow_from')
+
+    def __str__(self):
+        return '{} follows {}'.format(self.follow_from, self.follow_to)
+
+User.add_to_class('follows', models.ManyToManyField('self', through = Follow, related_name = 'follow', symmetrical=False))
+# symmetrical은 default가 true임. 강제 맞팔.

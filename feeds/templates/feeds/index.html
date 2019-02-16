@@ -11,7 +11,19 @@
             <button type="submit">삭제</button>
         </form>
         <p>{{feed.title}}</p>  <!-- 중첩된 괄호: 파이썬 코드인데, 보인다. -->
-        <p>작성자: {{feed.author.username}}</p>
+        <p>작성자:
+            <strong>{{feed.author.username}}</strong>
+            (following: {{ feed.author.follow_to.all.count }} / follower: {{ feed.author.follow_from.all.count }})
+            {% if request.user != feed.author %}
+                <a href="feeds/{{ feed.author.id }}/follow">
+                    {% if request.user not in feed.author.follows.all %}
+                        팔로우
+                    {% else %}
+                        팔로우 취소
+                    {% endif %}
+                </a>
+            {% endif %}
+        </p>
         <p>{{feed.content}}</p>
         <h3>댓글</h3>
         {% for c in feed.feedcomment_set.all %}
@@ -26,6 +38,7 @@
             <input type="text" name="content"/>
             <button type="submit">댓글 달기</button>
         </form>
+        <a href="/feeds/{{ feed.id }}/like">{{ feed.like_user_set.count }} Likes</a>
     </div>
 {% endfor %}
 
