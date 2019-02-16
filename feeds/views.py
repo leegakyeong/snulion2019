@@ -1,11 +1,16 @@
 from django.shortcuts import render
-from .models import Feed, FeedComment
+from .models import Feed, FeedComment, Like
 from django.shortcuts import redirect
 
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 
 class FeedListView(ListView):
     model = Feed  # 어떤 모델이 적용될 것인지
@@ -18,10 +23,15 @@ class FeedDetailView(DetailView):
     template_name = 'feeds/show.html'  # default: feeds/detail.html
     context_variable_name = 'feed'  # default: object
 
-class FeedCreateView(CreateView):
+class FeedCreateView(LoginRequiredMixin, CreateView):
+    login_url = '/accounts/login/'
     model = Feed
     fields = ['title', 'content']
     template_name = 'feeds/new.html'  # defalut: 'feeds/feed_create_form.html'.
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 class FeedUpdateView(UpdateView):
     model = Feed
@@ -38,7 +48,7 @@ class SignUpView(CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'registration/signup.html'
-    
+
 # Create your views here.
 # def index(request):
 #     if request.method == 'GET': # index
@@ -78,10 +88,20 @@ class SignUpView(CreateView):
 
 def create_comment(request, id):
     content = request.POST['content']
-    FeedComment.objects.create(feed_id=id, content=content)
+    author_id = request.user.id
+    FeedComment.objects.create(feed_id=id, content=content, author_id=author_id)
     return redirect('/feeds')
 
 def delete_comment(request, id, cid):
     c = FeedComment.objects.get(id=cid)
     c.delete()
     return redirect('/feeds')
+
+def feed_like(request, pk):
+    feed = Feed.objects.get(id = pk)
+    likeList = feed.like_set.filter(user_id = request.user.id) # 근데 왜 like가 아니고 like_seet이지??
+    if likeList.count() > 0:
+        feed.like_set.get(user_id = request.user.id).delete()
+    else:
+        Like.objects.create(user_id = request.user.id, feed_id = pk)
+    return redirect ('/feeds')

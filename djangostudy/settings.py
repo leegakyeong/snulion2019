@@ -118,6 +118,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/static/' # feeds 앱 안에서 찾을 경우?
+# feeds 앱 안의 정적 폴더 이름은 항상 static이어야 한다고 정함
+
+STATICFILES_DIRS = ( # 루트 디렉토리에서 찾을 경우?
+    os.path.join(BASE_DIR, 'static1'),
+    ('tootoo', os.path.join(BASE_DIR, 'static2')), # 나는 태그 붙여주니까 findstatic으로 아예 못 찾네...
+    # static 안에 하위 폴더를 또 만드는 거랑 태그랑 같은 역할!
+) # 리스트여도 되나 봄..?
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 LOGIN_REDIRECT_URL = '/feeds/'

@@ -2,7 +2,10 @@
 
 {% block content %}
   <h1>feed page</h1>
-  <a href="/feeds/new">new feed</a>
+  <!-- 버튼을 a태그로 바꾸기 (클래스만 바꿔 주는 것) -->
+  <a href="/feeds/new" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+    <i class="material-icons">add</i>
+  </a>
   {% for feed in feeds %}
     <div style="border: 1px solid grey;">
       <a href="/feeds/{{ feed.id }}">더보기</a>
@@ -11,9 +14,11 @@
         <button type="submit">삭제</button>
       </form>
       <p>{{ feed.title }}</p>
+      <p>작성자: {{feed.author.username}}</p>
       <p>{{ feed.content }}</p>
+      <h3>댓글</h3>
       {% for c in feed.feedcomment_set.all %}
-        <p>ㄴ {{ c.content }}</p>
+        <p>ㄴ {{c.author.username}}: {{ c.content }}</p>
         <form action="/feeds/{{ feed.id }}/comments/{{ c.id }}/" method="POST">
           {% csrf_token %}
           <button>댓글 삭제</button>
