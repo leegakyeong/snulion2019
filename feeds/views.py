@@ -11,6 +11,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse, HttpResponse
 from django.template import RequestContext
+from django.views.decorators.csrf import csrf_protect
+
 
 
 class FeedListView(ListView):
@@ -95,20 +97,19 @@ def delete(request, id):
     feed.delete()
     return redirect('/feeds')
 
+@csrf_protect
 def create_comment(request, id):
-    content = request.POST['content']
-    author_id = request.user.id
-    last = FeedComment.objects.create(feed_id=id, content=content, author_id = author_id)
-    data = {
-        'content': content,
-        'comment_id': last.id,
-        'comment_author': last.author.username,
-        'feed': id
-    }
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        response_data = {}
 
-    return render(request, 'feeds/index.html', {
-        'data': data
-    })
+        comment = FeedComment.objects.create(feed_id=id, content=content, author_id=request.user.id)
+        response_data['contnet'] = comment.content
+        response_data['comment_id'] = comment.id
+        response_data['feed_id'] = comment.feed_id
+        response_data['author_id'] = comment.author_id
+
+    return JsonResponse(response_data)
 
 def delete_comment(request, id, cid):
     c = FeedComment.objects.get(id=cid)
