@@ -66,12 +66,15 @@ $(document).ready(() => {
     // for csrf_token
     $('#comment-submit').click(function(e) {
         const pk = $(this).data("number");
+        const author = $(this).data("author");
+        alert(author);
         e.preventDefault();
         $.ajax({
             type: 'post',
             url: '/feeds/'+pk+'/comments/',
             data: {
                 'content': $('#comment-content'+pk).val(),
+                'author_id': author,
             },
             dataType: 'json',
             success: function(data) {

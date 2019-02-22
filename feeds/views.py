@@ -101,13 +101,14 @@ def delete(request, id):
 def create_comment(request, id):
     if request.method == 'POST':
         content = request.POST.get('content')
+        author = request.POST.get('author')
         response_data = {}
 
-        comment = FeedComment.objects.create(feed_id=id, content=content, author_id=request.user.id)
+        comment = FeedComment.objects.create(feed_id=id, content=content, author_id=author)
         response_data['contnet'] = comment.content
         response_data['comment_id'] = comment.id
         response_data['feed_id'] = comment.feed_id
-        response_data['author_id'] = comment.author_id
+        response_data['author'] = comment.author_id
 
     return JsonResponse(response_data)
 

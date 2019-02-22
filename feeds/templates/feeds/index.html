@@ -97,7 +97,7 @@
         <form action="/feeds/{{ feed.id }}/comments/" method="POST">
           {% csrf_token %}
           <input id="comment-content{{ feed.id }}" type="text" name="content" />
-          <button id="comment-submit" data-number="{{ feed.id }}" >댓글 달기</button>
+          <button id="comment-submit" data-number="{{ feed.id }}" data-author="{{ feed.author.id }}">댓글 달기</button>
         </form>
       
       </div>
