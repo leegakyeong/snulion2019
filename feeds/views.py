@@ -12,6 +12,7 @@ from django.views.decorators.http import require_POST
 from django.http import JsonResponse, HttpResponse
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect
+from django.middleware import csrf
 
 
 
@@ -97,18 +98,24 @@ def delete(request, id):
     feed.delete()
     return redirect('/feeds')
 
-@csrf_protect
 def create_comment(request, id):
     if request.method == 'POST':
         content = request.POST.get('content')
-        author = request.POST.get('author')
+        author = User.objects.get(id=request.user.id)
         response_data = {}
 
-        comment = FeedComment.objects.create(feed_id=id, content=content, author_id=author)
-        response_data['contnet'] = comment.content
+        token = request.META.get('CSRF_COOKIE', None)
+        if token is None:
+            token = csrf._get_new_csrf_key()
+            request.META['CSRF_COOKIE'] = token
+        request.META['CSRF_COOKIE_USED'] = True
+
+        comment = FeedComment.objects.create(feed_id=id, content=content, author=author)
+        response_data['content'] = comment.content
         response_data['comment_id'] = comment.id
         response_data['feed_id'] = comment.feed_id
-        response_data['author'] = comment.author_id
+        response_data['comment_author'] = comment.author.username
+        response_data['token'] = token
 
     return JsonResponse(response_data)
 

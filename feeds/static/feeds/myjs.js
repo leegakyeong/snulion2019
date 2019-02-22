@@ -64,31 +64,28 @@ $(document).ready(() => {
     
     });
     // for csrf_token
-    $('#comment-submit').click(function(e) {
+    $('.comment-button-all').mouseenter(function() {
         const pk = $(this).data("number");
-        const author = $(this).data("author");
-        alert(author);
-        e.preventDefault();
-        $.ajax({
-            type: 'post',
-            url: '/feeds/'+pk+'/comments/',
-            data: {
-                'content': $('#comment-content'+pk).val(),
-                'author_id': author,
-            },
-            dataType: 'json',
-            success: function(data) {
-                /*
-                const $str = ['<p>',data.comment_author,': ',data.content,'</p><form action="/feeds/',pk,'/comments/',data.comment_id,'/" method="POST">{% csrf_token %}<button>댓글 삭제</button></form>'];
-                $('.comment-list'+pk).append($str);
-                $('#comment-content'+pk).val("");
-                */
-                console.log(data);
-                return;
-            },
-            error: () => {
-                alert('error');
-            }
+        $('#comment-submit'+pk).click(function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'post',
+                url: '/feeds/'+pk+'/comments/',
+                data: {
+                    'content': $('#comment-content'+pk).val(),
+                },
+                dataType: 'json',
+                success: function(data) {
+                    const $str = ['<p>',data.comment_author,': ',data.content,'</p><form action="/feeds/',pk,'/comments/',data.comment_id,'/" method="POST"><input type="hidden" name="csrfmiddlewaretoken" value=',data.token,'><button>댓글 삭제</button></form>'].join("");
+                    $('.comment-list'+pk).append($str);
+                    $('#comment-content'+pk).val("");
+                    console.log(data);
+                    return;
+                },
+                error: () => {
+                    alert('error');
+                }
+            })
         })
     })
 })

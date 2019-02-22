@@ -62,6 +62,7 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                # 위의 코드가 request.user를 가능하게 해준다.
                 'django.contrib.messages.context_processors.messages',
             ],
         },
