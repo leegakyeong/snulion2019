@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Feed, FeedComment, Like, Follow
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
@@ -9,6 +9,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.http import JsonResponse, HttpResponse
+from django.template import RequestContext
+from django.views.decorators.csrf import csrf_protect
+from django.middleware import csrf
+
+
 
 class FeedListView(ListView):
     #model = Feed #어떤 모델이 적용될지
@@ -93,10 +99,25 @@ def delete(request, id):
     return redirect('/feeds')
 
 def create_comment(request, id):
-    content = request.POST['content']
-    author_id = request.user.id
-    FeedComment.objects.create(feed_id=id, content=content, author_id = author_id)
-    return redirect('/feeds')
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        author = User.objects.get(id=request.user.id)
+        response_data = {}
+
+        token = request.META.get('CSRF_COOKIE', None)
+        if token is None:
+            token = csrf._get_new_csrf_key()
+            request.META['CSRF_COOKIE'] = token
+        request.META['CSRF_COOKIE_USED'] = True
+
+        comment = FeedComment.objects.create(feed_id=id, content=content, author=author)
+        response_data['content'] = comment.content
+        response_data['comment_id'] = comment.id
+        response_data['feed_id'] = comment.feed_id
+        response_data['comment_author'] = comment.author.username
+        response_data['token'] = token
+
+    return JsonResponse(response_data)
 
 def delete_comment(request, id, cid):
     c = FeedComment.objects.get(id=cid)
