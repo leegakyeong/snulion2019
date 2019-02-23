@@ -25,7 +25,7 @@ SECRET_KEY = '((nrm-3mo(#gw5-r95!f$9+k-2j4h0w2+_yh&_491dxl%nx=x)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['ec2-13-125-193-243.ap-northeast-2.compute.amazonaws.com']
 
 
 # Application definition
